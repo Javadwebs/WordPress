@@ -144,59 +144,79 @@
                 return;
             }
 
-
-            $.ajax({
-                url: modernAIChat.ajax_url, // Global AJAX URL from wp_localize_script
-                type: 'POST',
-                data: {
-                    action: 'send_chat_message',
-                    nonce: modernAIChat.nonce, // Global nonce
-                    message: messageText,
-                    sessionId: sessionId,
-                    webhook_url: webhookUrlToUse
-                },
-                success: function(response) {
-                    if (response.success) {
-                        // Attempt to parse nested JSON if response.data is a string
-                        let botResponseText = '';
-                        if (typeof response.data === 'string') {
-                            try {
-                                const parsedData = JSON.parse(response.data);
-                                // Common patterns for webhook responses
-                                botResponseText = parsedData.response || parsedData.message || parsedData.text || response.data;
-                            } catch (e) {
-                                botResponseText = response.data; // Use as is if not JSON
+            try {
+                $.ajax({
+                    url: modernAIChat.ajax_url, // Global AJAX URL from wp_localize_script
+                    type: 'POST',
+                    data: {
+                        action: 'send_chat_message',
+                        nonce: modernAIChat.nonce, // Global nonce
+                        message: messageText,
+                        sessionId: sessionId,
+                        webhook_url: webhookUrlToUse
+                    },
+                    success: function(response) {
+                        // Defensive check for response and response.data
+                        if (response && response.success && response.data !== undefined) {
+                            let botResponseText = '';
+                            if (typeof response.data === 'string') {
+                                try {
+                                    const parsedData = JSON.parse(response.data);
+                                    // Common patterns for webhook responses
+                                    botResponseText = parsedData.response || parsedData.message || parsedData.text || response.data;
+                                } catch (e) {
+                                    // If parsing fails, but it's a string, use the string.
+                                    botResponseText = response.data;
+                                    console.warn('Modern AI Chat: Webhook response (string) was not valid JSON.', e, response.data);
+                                }
+                            } else if (typeof response.data === 'object' && response.data !== null) {
+                                botResponseText = response.data.response || response.data.message || response.data.text || JSON.stringify(response.data);
+                            } else if (response.data) { // For boolean, number, etc.
+                                botResponseText = String(response.data);
+                            } else {
+                                botResponseText = "Received an empty or unexpected response from the bot.";
+                                console.warn('Modern AI Chat: Webhook response data is empty or undefined type.', response);
                             }
-                        } else if (response.data && (response.data.response || response.data.message || response.data.text) ) {
-                             botResponseText = response.data.response || response.data.message || response.data.text;
-                        } else if (response.data && typeof response.data === 'object') {
-                            // Fallback for other object structures, might need adjustment
-                            // For now, just try to stringify it, or pick a common field.
-                            // This part is tricky without knowing the exact webhook response structure.
-                            // Let's assume if it's an object and no specific field is found, it might be the text itself (less common)
-                            // or we might need to indicate an unexpected format.
-                            botResponseText = JSON.stringify(response.data); // Crude, improve if possible
+                            addMessage(botResponseText, 'bot', settings.bot_name || 'AI Assistant');
+                        } else if (response && !response.success) {
+                            const errorMessage = (response.data && response.data.message) ? response.data.message : 'An error occurred with the chat service.';
+                            addMessage(`Error: ${errorMessage}`, 'bot', settings.bot_name || 'AI Assistant');
+                            console.error('Modern AI Chat: AJAX Error (success:false) - ', response.data);
+                        } else {
+                            // Handle cases where 'response' or 'response.data' is null/undefined unexpectedly
+                            addMessage('Error: Received an invalid response from the server.', 'bot', settings.bot_name || 'AI Assistant');
+                            console.error('Modern AI Chat: AJAX Error - Invalid response structure.', response);
                         }
-                         else {
-                            botResponseText = "Received an empty or unexpected response from the bot.";
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        let detailedError = textStatus;
+                        if (errorThrown) {
+                            detailedError += `, ${errorThrown}`;
                         }
-                        addMessage(botResponseText, 'bot', settings.bot_name);
-                    } else {
-                        const errorMessage = response.data && response.data.message ? response.data.message : 'An unknown error occurred.';
-                        addMessage(`Error: ${errorMessage}`, 'bot', settings.bot_name);
-                        console.error('Modern AI Chat: AJAX Error - ', response.data);
+                        if (jqXHR.responseText) {
+                             // Only log responseText in console, not to user, as it might be HTML/complex.
+                            console.error('Modern AI Chat: AJAX Request Failed - Server Response:', jqXHR.responseText);
+                        }
+                        addMessage(`Error: Could not connect to the server. (${detailedError})`, 'bot', settings.bot_name || 'AI Assistant');
+                        console.error('Modern AI Chat: AJAX Request Failed - ', textStatus, errorThrown);
+                    },
+                    complete: function() {
+                        hideTypingIndicator();
+                        elements.sendButton.prop('disabled', false);
+                        if (elements.input && typeof elements.input.focus === 'function') {
+                            elements.input.focus();
+                        }
                     }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    addMessage(`Error: Could not connect to the server. ${textStatus}`, 'bot', settings.bot_name);
-                    console.error('Modern AI Chat: AJAX Request Failed - ', textStatus, errorThrown, jqXHR.responseText);
-                },
-                complete: function() {
-                    hideTypingIndicator();
-                    elements.sendButton.prop('disabled', false);
+                });
+            } catch (e) {
+                console.error('Modern AI Chat: Synchronous error setting up AJAX request -', e);
+                addMessage('Error: Could not initiate message sending. Please try again.', 'bot', settings.bot_name || 'AI Assistant');
+                hideTypingIndicator();
+                elements.sendButton.prop('disabled', false);
+                 if (elements.input && typeof elements.input.focus === 'function') {
                     elements.input.focus();
                 }
-            });
+            }
         }
 
         // --- Event Listeners ---

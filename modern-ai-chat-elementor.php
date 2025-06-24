@@ -65,7 +65,7 @@ function modern_ai_chat_elementor_enqueue_assets() {
     wp_register_script(
         'modern-ai-chat-widget-script',
         MODERN_AI_CHAT_ELEMENTOR_PLUGIN_URL . 'assets/js/chat-widget.js',
-        [ 'jquery' ], // Add jquery as a dependency
+        [ 'jquery', 'elementor-frontend' ], // Added 'elementor-frontend' as a dependency
         MODERN_AI_CHAT_ELEMENTOR_VERSION,
         true // Load in footer
     );
