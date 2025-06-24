@@ -210,11 +210,11 @@ class ModernChatWidget extends Widget_Base {
                     'custom' => esc_html__( 'Custom', 'modern-ai-chat-elementor' ),
                 ],
                 'prefix_class' => 'modern-ai-chat-scheme--', // Used to apply scheme via CSS
-				'selectors_dictionary' => [ // This helps preview changes in editor
-					'light' => $this->get_color_scheme_settings('light'),
-					'dark' => $this->get_color_scheme_settings('dark'),
-					'gradient' => $this->get_color_scheme_settings('gradient'),
-				],
+				// 'selectors_dictionary' => [ // Temporarily removed for debugging
+				// 	'light' => $this->get_color_scheme_settings('light'),
+				// 	'dark' => $this->get_color_scheme_settings('dark'),
+				// 	'gradient' => $this->get_color_scheme_settings('gradient'),
+				// ],
 				'frontend_available' => true, // Make available in JS
             ]
         );
@@ -693,57 +693,40 @@ class ModernChatWidget extends Widget_Base {
         view.addRenderAttribute( 'wrapper', 'class', 'modern-ai-chat' );
         view.addRenderAttribute( 'wrapper', 'id', widgetId );
         view.addRenderAttribute( 'wrapper', 'data-widget-id', view.cid );
-        view.addRenderAttribute( 'wrapper', 'data-settings', JSON.stringify(jsSettings) );
+        // Pass only essential, safe data for the simplified preview
+        var minimalJsSettings = {
+             widgetId: widgetId,
+             // webhook_url: webhookUrlSetting, // Not needed for minimal preview
+             bot_name: botName,
+             // bot_avatar_url: botAvatarUrl, // Not needed for minimal preview
+             initial_greeting: initialGreeting, // Keep for basic display
+             input_placeholder: inputPlaceholder,
+             // ajax_url: '<?php echo admin_url( 'admin-ajax.php' ); ?>', // Not needed for minimal preview
+             // nonce: '<?php echo wp_create_nonce( 'modern_ai_chat_nonce' ); ?>' // Not needed for minimal preview
+        };
+        view.addRenderAttribute( 'wrapper', 'data-settings', JSON.stringify(minimalJsSettings) );
+
         #>
 		<div {{{ view.getRenderAttributeString( 'wrapper' ) }}}>
-			<div class="modern-ai-chat__header">
-                <# /* Check if settings.bot_avatar and settings.bot_avatar.url exist */ #>
-                <# if ( settings.bot_avatar && settings.bot_avatar.url ) { #>
-                    <img src="{{ settings.bot_avatar.url }}" alt="{{ botName }}" class="modern-ai-chat__header-avatar">
-                <# } else { #>
-                     <img src="<?php echo \Elementor\Utils::get_placeholder_image_src(); ?>" alt="{{ botName }}" class="modern-ai-chat__header-avatar modern-ai-chat__header-avatar--placeholder">
-                <# } #>
+            <div class="modern-ai-chat__header">
+                 <img src="<?php echo \Elementor\Utils::get_placeholder_image_src(); ?>" alt="{{ botName }}" class="modern-ai-chat__header-avatar modern-ai-chat__header-avatar--placeholder">
 				<div class="modern-ai-chat__header-title">{{{ chatHeaderTitle }}}</div>
 			</div>
-			<div class="modern-ai-chat__messages-container">
-                <div class="modern-ai-chat__messages">
-                    <# if ( initialGreeting ) { #>
-                        <div class="modern-ai-chat__message modern-ai-chat__message--bot">
-                            <img src="{{ botAvatarUrl }}" alt="{{ botName }}" class="modern-ai-chat__message-avatar">
-                            <div class="modern-ai-chat__message-content">
-                                <div class="modern-ai-chat__message-bubble">
-                                    <div class="modern-ai-chat__message-text">{{{ initialGreeting }}}</div>
-                                </div>
-                                <div class="modern-ai-chat__message-name">{{{ botName }}}</div>
-                            </div>
-                        </div>
-                    <# } #>
-                    <!-- Placeholder for messages -->
-                    <div class="modern-ai-chat__message modern-ai-chat__message--user">
-                         <div class="modern-ai-chat__message-content">
-                            <div class="modern-ai-chat__message-bubble">
-                                <div class="modern-ai-chat__message-text"><?php esc_html_e( 'Your message here...', 'modern-ai-chat-elementor' ); ?></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modern-ai-chat__message modern-ai-chat__message--bot modern-ai-chat__typing-indicator" style="display:none;">
-                        <img src="{{ botAvatarUrl }}" alt="{{ botName }}" class="modern-ai-chat__message-avatar">
-                        <div class="modern-ai-chat__message-content">
-                            <div class="modern-ai-chat__message-bubble">
-                                <div class="modern-ai-chat__typing-dot"></div>
-                                <div class="modern-ai-chat__typing-dot"></div>
-                                <div class="modern-ai-chat__typing-dot"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="modern-ai-chat__messages-container" style="min-height: 150px; background: #f0f0f0; text-align:center; padding-top: 50px;">
+                <?php esc_html_e( 'Chat Preview Area', 'modern-ai-chat-elementor' ); ?>
+                <# if ( initialGreeting ) { #>
+                    <p style="font-size: smaller; color: #555; margin-top:10px;"><i><?php esc_html_e( 'Initial Greeting:', 'modern-ai-chat-elementor' ); ?> {{{ initialGreeting }}}</i></p>
+                <# } #>
             </div>
 			<div class="modern-ai-chat__input-area">
-				<input type="text" class="modern-ai-chat__input" placeholder="{{ settings.input_placeholder }}">
-				<button class="modern-ai-chat__send-button" aria-label="<?php esc_attr_e('Send Message', 'modern-ai-chat-elementor'); ?>">
+				<input type="text" class="modern-ai-chat__input" placeholder="{{{ inputPlaceholder }}}" disabled>
+				<button class="modern-ai-chat__send-button" aria-label="<?php esc_attr_e('Send Message', 'modern-ai-chat-elementor'); ?>" disabled>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z"/></svg>
 				</button>
 			</div>
+            <div style="text-align:center; padding:10px; background:#fff; border-top:1px solid #eee; font-size:12px; color:#777;">
+                <?php esc_html_e( 'Full chat functionality available on the frontend.', 'modern-ai-chat-elementor' ); ?>
+            </div>
 		</div>
         <?php
 	}
