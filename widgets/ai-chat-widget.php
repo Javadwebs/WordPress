@@ -665,45 +665,56 @@ class ModernChatWidget extends Widget_Base {
         ?>
         <#
         var widgetId = 'modern-ai-chat-' + view.cid;
-        var botAvatarUrl = settings.bot_avatar.url ? settings.bot_avatar.url : '<?php echo \Elementor\Utils::get_placeholder_image_src(); ?>';
+
+        // Default values for robustness in editor
+        var botName = settings.bot_name || 'AI Assistant';
+        var chatHeaderTitle = settings.chat_header_title || 'Chat with us';
+        var initialGreeting = settings.initial_greeting || '';
+        var inputPlaceholder = settings.input_placeholder || 'Type your message...';
+        var webhookUrlSetting = settings.webhook_url || '';
+
+        // Robustly get bot_avatar_url
+        var botAvatarUrl = '<?php echo \Elementor\Utils::get_placeholder_image_src(); ?>';
+        if ( settings.bot_avatar && typeof settings.bot_avatar === 'object' && settings.bot_avatar.url ) {
+            botAvatarUrl = settings.bot_avatar.url;
+        }
 
         var jsSettings = {
             widgetId: widgetId,
-            webhook_url: settings.webhook_url,
-            bot_name: settings.bot_name,
-            bot_avatar_url: botAvatarUrl,
-            initial_greeting: settings.initial_greeting,
-            input_placeholder: settings.input_placeholder,
+            webhook_url: webhookUrlSetting,
+            bot_name: botName,
+            bot_avatar_url: botAvatarUrl, // Already determined safely
+            initial_greeting: initialGreeting,
+            input_placeholder: inputPlaceholder,
             ajax_url: '<?php echo admin_url( 'admin-ajax.php' ); ?>',
-            nonce: '<?php echo wp_create_nonce( 'modern_ai_chat_nonce' ); ?>' // Nonce for editor preview might need refresh or be illustrative
+            nonce: '<?php echo wp_create_nonce( 'modern_ai_chat_nonce' ); ?>'
         };
 
         view.addRenderAttribute( 'wrapper', 'class', 'modern-ai-chat' );
-        // Color scheme class is handled by prefix_class in control
-        // view.addRenderAttribute( 'wrapper', 'class', 'modern-ai-chat-scheme--' + settings.color_scheme );
         view.addRenderAttribute( 'wrapper', 'id', widgetId );
         view.addRenderAttribute( 'wrapper', 'data-widget-id', view.cid );
         view.addRenderAttribute( 'wrapper', 'data-settings', JSON.stringify(jsSettings) );
         #>
 		<div {{{ view.getRenderAttributeString( 'wrapper' ) }}}>
 			<div class="modern-ai-chat__header">
-                <# if ( settings.bot_avatar.url ) { #>
-                    <img src="{{ settings.bot_avatar.url }}" alt="{{ settings.bot_name }}" class="modern-ai-chat__header-avatar">
+                <# /* Check if settings.bot_avatar and settings.bot_avatar.url exist */ #>
+                <# if ( settings.bot_avatar && settings.bot_avatar.url ) { #>
+                    <img src="{{ settings.bot_avatar.url }}" alt="{{ botName }}" class="modern-ai-chat__header-avatar">
                 <# } else { #>
-                     <img src="<?php echo \Elementor\Utils::get_placeholder_image_src(); ?>" alt="{{ settings.bot_name }}" class="modern-ai-chat__header-avatar modern-ai-chat__header-avatar--placeholder">
+                     <img src="<?php echo \Elementor\Utils::get_placeholder_image_src(); ?>" alt="{{ botName }}" class="modern-ai-chat__header-avatar modern-ai-chat__header-avatar--placeholder">
                 <# } #>
-				<div class="modern-ai-chat__header-title">{{{ settings.chat_header_title }}}</div>
+				<div class="modern-ai-chat__header-title">{{{ chatHeaderTitle }}}</div>
 			</div>
 			<div class="modern-ai-chat__messages-container">
                 <div class="modern-ai-chat__messages">
-                    <# if ( settings.initial_greeting ) { #>
+                    <# if ( initialGreeting ) { #>
                         <div class="modern-ai-chat__message modern-ai-chat__message--bot">
-                            <img src="{{ botAvatarUrl }}" alt="{{ settings.bot_name }}" class="modern-ai-chat__message-avatar">
+                            <img src="{{ botAvatarUrl }}" alt="{{ botName }}" class="modern-ai-chat__message-avatar">
                             <div class="modern-ai-chat__message-content">
                                 <div class="modern-ai-chat__message-bubble">
-                                    <div class="modern-ai-chat__message-text">{{{ settings.initial_greeting }}}</div>
+                                    <div class="modern-ai-chat__message-text">{{{ initialGreeting }}}</div>
                                 </div>
-                                <div class="modern-ai-chat__message-name">{{{ settings.bot_name }}}</div>
+                                <div class="modern-ai-chat__message-name">{{{ botName }}}</div>
                             </div>
                         </div>
                     <# } #>
@@ -716,7 +727,7 @@ class ModernChatWidget extends Widget_Base {
                         </div>
                     </div>
                     <div class="modern-ai-chat__message modern-ai-chat__message--bot modern-ai-chat__typing-indicator" style="display:none;">
-                        <img src="{{ botAvatarUrl }}" alt="{{ settings.bot_name }}" class="modern-ai-chat__message-avatar">
+                        <img src="{{ botAvatarUrl }}" alt="{{ botName }}" class="modern-ai-chat__message-avatar">
                         <div class="modern-ai-chat__message-content">
                             <div class="modern-ai-chat__message-bubble">
                                 <div class="modern-ai-chat__typing-dot"></div>
