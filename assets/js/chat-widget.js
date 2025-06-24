@@ -1,6 +1,14 @@
 (function($) {
     'use strict';
 
+    // Early check for critical localized data
+    if (typeof modernAIChat === 'undefined' || !modernAIChat.ajax_url || !modernAIChat.nonce) {
+        console.error('Modern AI Chat: CRITICAL - Localized data (modernAIChat object with ajax_url and nonce) is missing. Chat functionality will be severely impaired or non-functional. Ensure wp_localize_script is working correctly for both editor and frontend.');
+        // Depending on the desired behavior, you might want to prevent further execution
+        // For now, we'll let it proceed so other console logs can provide more context if this isn't the sole issue.
+    }
+
+
     /**
      * Generates a simple v4 UUID.
      * @returns {string} A unique session ID.
