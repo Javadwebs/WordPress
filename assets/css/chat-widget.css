@@ -1,0 +1,434 @@
+/* Modern AI Chat Widget Styles */
+
+/* CSS Variables for Theming - Default to Light Scheme */
+:root {
+    --mac-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+    /* Light Scheme (Default) */
+    --mac-chat-window-bg: #F0F4F8; /* Light grey blue, similar to Telegram desktop */
+    --mac-chat-window-border-color: #DDE1E6;
+    --mac-chat-window-box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    --mac-chat-window-border-radius: 12px;
+
+    --mac-header-bg: #FFFFFF;
+    --mac-header-text-color: #2C3E50; /* Dark blue/grey */
+    --mac-header-border-bottom: 1px solid #E0E0E0;
+    --mac-header-padding: 12px 15px;
+    --mac-header-avatar-size: 36px;
+    --mac-header-title-font-size: 16px;
+    --mac-header-title-font-weight: 600;
+
+    --mac-messages-container-bg: transparent; /* Will inherit from chat window */
+    --mac-messages-padding: 15px;
+
+    --mac-user-message-bg: #DCF8C6; /* Light green, Telegram-like */
+    --mac-user-message-text-color: #1E1E1E;
+    --mac-user-message-border-radius: 18px 18px 4px 18px;
+
+    --mac-bot-message-bg: #FFFFFF;
+    --mac-bot-message-text-color: #1E1E1E;
+    --mac-bot-message-border-radius: 18px 18px 18px 4px;
+    --mac-bot-avatar-size: 30px;
+
+    --mac-message-font-size: 14px;
+    --mac-message-line-height: 1.5;
+    --mac-message-padding: 8px 12px;
+    --mac-message-time-font-size: 10px;
+    --mac-message-time-color: rgba(0, 0, 0, 0.45); /* Default, will be overridden by text color in specific bubbles */
+    --mac-message-name-font-size: 12px;
+    --mac-message-name-font-weight: 600;
+
+    --mac-input-area-bg: #FFFFFF;
+    --mac-input-area-padding: 10px 15px;
+    --mac-input-area-border-top: 1px solid #E0E0E0;
+
+    --mac-input-field-bg: #F5F5F5;
+    --mac-input-field-text-color: #222222;
+    --mac-input-field-border: 1px solid #E0E0E0;
+    --mac-input-field-border-radius: 20px;
+    --mac-input-field-padding: 10px 15px;
+    --mac-input-field-font-size: 14px;
+
+    --mac-send-button-bg: #007AFF; /* Blue, Telegram-like */
+    --mac-send-button-icon-color: #FFFFFF;
+    --mac-send-button-size: 38px;
+    --mac-send-button-hover-bg: #0056b3;
+
+    --mac-typing-dot-bg: #AEB3B8;
+    --mac-typing-dot-size: 7px;
+}
+
+/* Apply variables based on scheme selected in Elementor */
+/* Elementor adds 'modern-ai-chat-scheme--scheme_name' to the widget wrapper */
+
+.elementor-widget-modern-ai-chat.modern-ai-chat-scheme--light { /* Values already defined in :root, so this is for specificity if needed */ }
+
+.elementor-widget-modern-ai-chat.modern-ai-chat-scheme--dark {
+    --mac-chat-window-bg: #182029; /* Dark blue/grey */
+    --mac-chat-window-border-color: #0F161E;
+    --mac-chat-window-box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
+    --mac-header-bg: #222E3A;
+    --mac-header-text-color: #EAEAEA;
+    --mac-header-border-bottom: 1px solid #2d3a48;
+
+    --mac-user-message-bg: #005C4B; /* Darker green */
+    --mac-user-message-text-color: #E0E0E0;
+
+    --mac-bot-message-bg: #2A3642; /* Slightly lighter than chat window */
+    --mac-bot-message-text-color: #E0E0E0;
+
+    --mac-message-time-color: rgba(255, 255, 255, 0.45);
+
+    --mac-input-area-bg: #222E3A;
+    --mac-input-area-border-top: 1px solid #2d3a48;
+
+    --mac-input-field-bg: #171F27;
+    --mac-input-field-text-color: #D0D0D0;
+    --mac-input-field-border: 1px solid #2d3a48;
+
+    --mac-send-button-bg: #007AFF;
+    --mac-send-button-icon-color: #FFFFFF;
+    --mac-send-button-hover-bg: #0056b3;
+
+    --mac-typing-dot-bg: #6c7a89;
+}
+
+.elementor-widget-modern-ai-chat.modern-ai-chat-scheme--gradient {
+    --mac-chat-window-bg: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+    --mac-chat-window-border-color: rgba(255,255,255,0.2);
+    --mac-chat-window-box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+
+    --mac-header-bg: rgba(255,255,255,0.1);
+    --mac-header-text-color: #FFFFFF;
+    --mac-header-border-bottom: 1px solid rgba(255,255,255,0.15);
+
+    --mac-user-message-bg: rgba(0, 92, 75, 0.8); /* Dark green with transparency */
+    --mac-user-message-text-color: #FFFFFF;
+
+    --mac-bot-message-bg: rgba(44, 58, 71, 0.7); /* Dark blue/grey with transparency */
+    --mac-bot-message-text-color: #FFFFFF;
+
+    --mac-message-time-color: rgba(255, 255, 255, 0.6);
+
+    --mac-input-area-bg: rgba(44, 58, 71, 0.4);
+    --mac-input-area-border-top: 1px solid rgba(255,255,255,0.1);
+
+    --mac-input-field-bg: rgba(30, 39, 50, 0.6);
+    --mac-input-field-text-color: #FFFFFF;
+    --mac-input-field-border: 1px solid rgba(255,255,255,0.2);
+
+    --mac-send-button-bg: #007AFF;
+    --mac-send-button-icon-color: #FFFFFF;
+    --mac-send-button-hover-bg: #298dff;
+
+    --mac-typing-dot-bg: #bdc3c7;
+}
+
+
+/* Main Chat Widget Container */
+.modern-ai-chat {
+    font-family: var(--mac-font-family);
+    background: var(--mac-chat-window-bg);
+    border: 1px solid var(--mac-chat-window-border-color); /* Default, can be overridden by Elementor control */
+    box-shadow: var(--mac-chat-window-box-shadow); /* Default, can be overridden by Elementor control */
+    border-radius: var(--mac-chat-window-border-radius); /* Default, can be overridden by Elementor control */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative; /* For potential absolute positioned elements inside */
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+/* Header */
+.modern-ai-chat__header {
+    background-color: var(--mac-header-bg);
+    color: var(--mac-header-text-color);
+    padding: var(--mac-header-padding);
+    display: flex;
+    align-items: center;
+    border-bottom: var(--mac-header-border-bottom);
+    flex-shrink: 0;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.modern-ai-chat__header-avatar {
+    width: var(--mac-header-avatar-size);
+    height: var(--mac-header-avatar-size);
+    border-radius: 50%;
+    margin-right: 12px;
+    object-fit: cover;
+}
+.modern-ai-chat__header-avatar--placeholder {
+    padding: 4px; /* If using a generic icon placeholder */
+    background-color: #e0e0e0;
+}
+
+.modern-ai-chat__header-title {
+    font-size: var(--mac-header-title-font-size);
+    font-weight: var(--mac-header-title-font-weight);
+    flex-grow: 1;
+}
+
+/* Messages Area */
+.modern-ai-chat__messages-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: var(--mac-messages-padding);
+    background-color: var(--mac-messages-container-bg);
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.3s ease;
+}
+
+.modern-ai-chat__messages {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Space between messages */
+}
+
+/* Individual Message Styling */
+.modern-ai-chat__message {
+    display: flex;
+    align-items: flex-end; /* Align avatar with bottom of message content */
+    max-width: 85%; /* Max width of a message row */
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+    animation: messageFadeIn 0.3s ease-out forwards;
+}
+
+@keyframes messageFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modern-ai-chat__message-avatar {
+    width: var(--mac-bot-avatar-size);
+    height: var(--mac-bot-avatar-size);
+    border-radius: 50%;
+    margin-right: 10px;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+
+.modern-ai-chat__message-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.modern-ai-chat__message-bubble {
+    padding: var(--mac-message-padding);
+    font-size: var(--mac-message-font-size);
+    line-height: var(--mac-message-line-height);
+    word-wrap: break-word;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.modern-ai-chat__message-text {
+    /* Text color is inherited from parent or set by specific message type */
+}
+
+.modern-ai-chat__message-time {
+    font-size: var(--mac-message-time-font-size);
+    margin-top: 4px;
+    text-align: right; /* Default, can be overridden */
+    opacity: 0.7; /* Default, can be overridden */
+}
+
+.modern-ai-chat__message-name {
+    font-size: var(--mac-message-name-font-size);
+    font-weight: var(--mac-message-name-font-weight);
+    margin-bottom: 2px;
+    color: var(--mac-header-text-color); /* Use header text color for visibility, or define a new var */
+    opacity: 0.8;
+}
+
+/* User Message (Sent) */
+.modern-ai-chat__message--user {
+    align-self: flex-end;
+    margin-left: auto; /* Push to the right */
+}
+
+.modern-ai-chat__message--user .modern-ai-chat__message-avatar {
+    display: none; /* No avatar for user messages by default */
+}
+
+.modern-ai-chat__message--user .modern-ai-chat__message-content {
+    align-items: flex-end;
+}
+
+.modern-ai-chat__message--user .modern-ai-chat__message-bubble {
+    background-color: var(--mac-user-message-bg);
+    color: var(--mac-user-message-text-color);
+    border-radius: var(--mac-user-message-border-radius); /* Default, can be overridden by Elementor control */
+}
+.modern-ai-chat__message--user .modern-ai-chat__message-time {
+    color: var(--mac-user-message-text-color); /* Inherit from bubble text color */
+    margin-left: 8px; /* Space for timestamp inside bubble if desired */
+}
+
+/* Bot Message (Received) */
+.modern-ai-chat__message--bot {
+    align-self: flex-start;
+}
+
+.modern-ai-chat__message--bot .modern-ai-chat__message-content {
+    align-items: flex-start;
+}
+
+.modern-ai-chat__message--bot .modern-ai-chat__message-bubble {
+    background-color: var(--mac-bot-message-bg);
+    color: var(--mac-bot-message-text-color);
+    border-radius: var(--mac-bot-message-border-radius); /* Default, can be overridden by Elementor control */
+}
+
+.modern-ai-chat__message--bot .modern-ai-chat__message-time {
+    color: var(--mac-bot-message-text-color); /* Inherit from bubble text color */
+}
+
+
+/* Typing Indicator */
+.modern-ai-chat__typing-indicator .modern-ai-chat__message-bubble {
+    padding: 10px 12px; /* Adjust padding for typing dots */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modern-ai-chat__typing-dot {
+    width: var(--mac-typing-dot-size);
+    height: var(--mac-typing-dot-size);
+    background-color: var(--mac-typing-dot-bg);
+    border-radius: 50%;
+    margin: 0 2px;
+    animation: typingPulse 1.4s infinite ease-in-out both;
+}
+
+.modern-ai-chat__typing-dot:nth-child(1) { animation-delay: -0.32s; }
+.modern-ai-chat__typing-dot:nth-child(2) { animation-delay: -0.16s; }
+.modern-ai-chat__typing-dot:nth-child(3) { animation-delay: 0s; }
+
+@keyframes typingPulse {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1.0); }
+}
+
+/* Input Area */
+.modern-ai-chat__input-area {
+    display: flex;
+    align-items: center;
+    padding: var(--mac-input-area-padding);
+    background-color: var(--mac-input-area-bg);
+    border-top: var(--mac-input-area-border-top);
+    flex-shrink: 0;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.modern-ai-chat__input {
+    flex-grow: 1;
+    border: var(--mac-input-field-border); /* Default, can be overridden by Elementor control */
+    border-radius: var(--mac-input-field-border-radius); /* Default, can be overridden by Elementor control */
+    padding: var(--mac-input-field-padding);
+    font-size: var(--mac-input-field-font-size);
+    background-color: var(--mac-input-field-bg);
+    color: var(--mac-input-field-text-color);
+    outline: none;
+    transition: border-color 0.2s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.modern-ai-chat__input:focus {
+    border-color: var(--mac-send-button-bg); /* Use send button color for focus, or a new var */
+    /* box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2); */ /* Optional focus shadow */
+}
+
+.modern-ai-chat__send-button {
+    background-color: var(--mac-send-button-bg);
+    color: var(--mac-send-button-icon-color);
+    border: none;
+    border-radius: 50%;
+    width: var(--mac-send-button-size);
+    height: var(--mac-send-button-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: background-color 0.2s ease;
+    padding: 0; /* Reset padding */
+}
+
+.modern-ai-chat__send-button svg {
+    width: 20px; /* Adjust icon size within the button */
+    height: 20px;
+    fill: var(--mac-send-button-icon-color); /* Ensure SVG fill uses the variable */
+}
+
+.modern-ai-chat__send-button:hover {
+    background-color: var(--mac-send-button-hover-bg);
+}
+
+.modern-ai-chat__send-button:disabled {
+    background-color: #BDBDBD; /* Grey out when disabled */
+    cursor: not-allowed;
+}
+.modern-ai-chat__send-button:disabled svg {
+    fill: #757575;
+}
+
+
+/* Scrollbar Styling (Optional, Webkit browsers) */
+.modern-ai-chat__messages-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modern-ai-chat__messages-container::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.05);
+    border-radius: 3px;
+}
+
+.modern-ai-chat__messages-container::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.2);
+    border-radius: 3px;
+}
+
+.modern-ai-chat__messages-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(0,0,0,0.3);
+}
+
+/* Dark theme scrollbar */
+.elementor-widget-modern-ai-chat.modern-ai-chat-scheme--dark .modern-ai-chat__messages-container::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.05);
+}
+.elementor-widget-modern-ai-chat.modern-ai-chat-scheme--dark .modern-ai-chat__messages-container::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.2);
+}
+.elementor-widget-modern-ai-chat.modern-ai-chat-scheme--dark .modern-ai-chat__messages-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+/* Gradient theme scrollbar */
+.elementor-widget-modern-ai-chat.modern-ai-chat-scheme--gradient .modern-ai-chat__messages-container::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+}
+.elementor-widget-modern-ai-chat.modern-ai-chat-scheme--gradient .modern-ai-chat__messages-container::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3);
+}
+.elementor-widget-modern-ai-chat.modern-ai-chat-scheme--gradient .modern-ai-chat__messages-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.4);
+}
+/* Initial hidden state for messages if needed for JS control (already handled by animation) */
+/* .modern-ai-chat__message {
+    opacity: 0;
+    transform: translateY(20px);
+} */
+/* .modern-ai-chat__message.modern-ai-chat__message--visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+} */
+/* Ensure Elementor default styles don't interfere too much */
+.elementor-widget-modern-ai-chat .elementor-widget-container {
+    margin: 0; /* Reset Elementor's default margin if it adds any */
+}
